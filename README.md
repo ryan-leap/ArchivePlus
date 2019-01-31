@@ -1,5 +1,5 @@
 # ArchivePlus
-ArchivePlus is a PowerShell module which supplements the built-in Compress-Archive and Expand-Archive cmdlets
+ArchivePlus is a PowerShell module which supplements the native Compress-Archive and Expand-Archive cmdlets
 
 ## Installing
 #### Download from GitHub repository
