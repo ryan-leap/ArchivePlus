@@ -51,7 +51,8 @@ function Get-ArchivePlusChildItem {
   }
 
   Process {
-
+    Expand-Archive -Path $Path -DestinationPath $destinationPath
+    Get-ChildItem -Path $destinationPath 
   }
 
   End {
