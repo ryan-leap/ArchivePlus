@@ -12,11 +12,15 @@ function Get-ArchivePlusChildItem {
 .PARAMETER Path
   Specifies the path to the archive file.
 .PARAMETER Name
-  Gets only the names of the items in the archive.
+  Gets only the names of the items in the archive file.
 .PARAMETER Recurse
   Gets the items in the specified archive and in all child items of the expanded archive.
 .PARAMETER Depth
   Enables you to control the depth of recursion.
+.PARAMETER FileHash
+  Adds a file hash property to each file item in the archive file.
+.PARAMETER Algorithm
+  Specifies the cryptographic hash function to use for computing the hash value of the contents of the specified file.
 .PARAMETER WorkingPath
   Specifies the path where this function will create temporary folder(s) to extract the archive contents
 .OUTPUTS
@@ -48,8 +52,8 @@ function Get-ArchivePlusChildItem {
     [switch] $FileHash,
 
     [Parameter(ParameterSetName='AddHash',Mandatory=$false)] 
-    [ValidateSet('SHA1','SHA256','SHA384','SHA512','MACTripleDES','MD5','RIPEMD160')]
-    [string[]] $Algorithm = 'SHA256',
+    [ValidateSet('SHA1','SHA256','SHA384','SHA512','MD5')]
+    [string] $Algorithm = 'SHA256',
 
     [ValidateScript({Test-Path -Path $_ -PathType Container})]
     [Parameter(Mandatory=$false)]
@@ -89,6 +93,11 @@ function Get-ArchivePlusChildItem {
     }
     else {
       foreach ($item in (Get-ChildItem @childItemParms)) {
+        if (($FileHash) -and (-not($item.PSIsContainer))) {
+          $fileHashInfo = Get-FileHash -Path $item
+          Add-Member -InputObject $item -MemberType NoteProperty -Name 'Hash' -Value $fileHashInfo.Hash
+          Add-Member -InputObject $item -MemberType NoteProperty -Name 'Algorithm' -Value $fileHashInfo.Algorithm
+        }
         Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath -PassThru
       }
     }
