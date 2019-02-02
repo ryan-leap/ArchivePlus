@@ -32,6 +32,8 @@ function Get-ArchivePlusChildItem {
     [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
     [string] $Path,
 
+    [switch] $Recurse,
+
     [ValidateScript({Test-Path -Path $_ -PathType Container})]
     [Parameter(Mandatory=$false)]
     [string] $WorkingPath = $env:TEMP
@@ -52,7 +54,12 @@ function Get-ArchivePlusChildItem {
 
   Process {
     Expand-Archive -Path $Path -DestinationPath $destinationPath
-    Get-ChildItem -Path $destinationPath 
+    [hashtable] $childItemParms = @{
+      'Path'     = $destinationPath
+      'Recurse'  = if ($Recurse) { $true } else { $false }
+    }
+
+    Get-ChildItem @childItemParms
   }
 
   End {
