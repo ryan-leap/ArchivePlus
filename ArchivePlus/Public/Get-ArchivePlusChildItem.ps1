@@ -6,7 +6,7 @@ function Get-ArchivePlusChildItem {
   Gets the items and child items in the archive specified. Extracts the archive to a temporary
   location and runs Get-ChildItem against the extracted contents to provide results.
 .PARAMETER Path
-  Specifies the path to an archive (zip) file.
+  Specifies the path to the archive file.
 .PARAMETER Name
   Gets only the names of the items in the archive.
 .PARAMETER Recurse
@@ -58,8 +58,10 @@ function Get-ArchivePlusChildItem {
       'Path'     = $destinationPath
       'Recurse'  = if ($Recurse) { $true } else { $false }
     }
-
-    Get-ChildItem @childItemParms
+    $archivePath = Get-ChildItem -Path $Path
+    foreach ($item in (Get-ChildItem @childItemParms)) {
+      Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath -PassThru
+    }
   }
 
   End {
