@@ -39,7 +39,9 @@ function Compare-ArchivePlus {
 
     [switch] $ExcludeDifferent,
 
-    [switch] $IncludeEqual
+    [switch] $IncludeEqual,
+
+    [switch] $PassThru
   )
 
   Begin {}
