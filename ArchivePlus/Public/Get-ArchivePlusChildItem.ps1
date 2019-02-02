@@ -98,7 +98,8 @@ function Get-ArchivePlusChildItem {
           Add-Member -InputObject $item -MemberType NoteProperty -Name 'Hash' -Value $fileHashInfo.Hash
           Add-Member -InputObject $item -MemberType NoteProperty -Name 'Algorithm' -Value $fileHashInfo.Algorithm
         }
-        Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath -PassThru
+        Add-Member -InputObject $item -MemberType NoteProperty -Name 'RelativeName' -Value ($item.FullName.Substring($destinationPath.FullName.Length + 1))
+        Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath
       }
     }
 
