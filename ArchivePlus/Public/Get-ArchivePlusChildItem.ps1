@@ -37,8 +37,9 @@ function Get-ArchivePlusChildItem {
 
     [switch] $Recurse,
 
+    [ValidateScript({Try { [uint32] $_ | Out-Null; $true } catch { $false }})]
     [Parameter(Mandatory=$false)]
-    [uint32] $Depth,
+    [string] $Depth,
 
     [switch] $Name,
     
@@ -71,8 +72,8 @@ function Get-ArchivePlusChildItem {
       'Name'     = if ($Name) { $true } else { $false }
       'Recurse'  = if ($Recurse) { $true } else { $false }
     }
-    if ($null -ne $Depth) { # This parameter gets added (as a zero) even when it is not explicitly used. Seems not good.
-      $childItemParms.Add('Depth', $Depth)
+    if (-not([string]::IsNullOrEmpty($Depth))) {
+      $childItemParms.Add('Depth', [uint32] $Depth)
     }
     Write-Debug "Parameters for 'Get-ChildItem': $(New-Object -TypeName PSObject -Property $childItemParms)"
     if ($Name) {
