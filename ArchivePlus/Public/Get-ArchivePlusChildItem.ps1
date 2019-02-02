@@ -38,14 +38,16 @@ function Get-ArchivePlusChildItem {
   )
 
   Begin {
-    if (-not(Test-Path -Path (Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus'))) {
-      Write-Verbose "Creating root working folder..."
-      [string] $rootPath = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus') -ItemType Directory -ErrorAction Stop
+    $rootPath = Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus'
+    if (-not(Test-Path -Path $rootPath -PathType Container)) {
+      Write-Verbose "Creating root working folder [$rootPath]..."
+      $rootPath = New-Item -Path $rootPath -ItemType Directory -ErrorAction Stop
       Write-Verbose "Creating root working folder [$($rootPath.FullName)] complete."
     }
-    Write-Verbose "Creating archive extract working folder..."
-    [string] $destinationPath = New-Item -Path (Join-Path $rootPath -ChildPath (Get-Date -Format FileDateTime)) -ItemType Directory -ErrorAction Stop
-    Write-Verbose "Creating archive extract working folder [$($destinationPath.FullName)] complete."
+    $destinationPath = Join-Path $rootPath -ChildPath (Get-Date -Format FileDateTime)
+    Write-Verbose "Creating archive working folder [$destinationPath]..."
+    $destinationPath = New-Item -Path $destinationPath -ItemType Directory -ErrorAction Stop
+    Write-Verbose "Creating archive working folder [$($destinationPath.FullName)] complete."
   }
 
   Process {
@@ -54,9 +56,14 @@ function Get-ArchivePlusChildItem {
 
   End {
     if (Test-Path -Path $destinationPath -PathType Container) {
-      Write-Verbose "Removing working folder [$destinationPath]..."
-      # Remove-Item -Path $destinationPath -Recurse
-      Write-Verbose "Removing working folder [$destinationPath] complete."
+      Write-Verbose "Removing archive working folder [$destinationPath]..."
+      Remove-Item -Path $destinationPath -Recurse -Confirm:$false
+      Write-Verbose "Removing archive working folder [$destinationPath] complete."
+    }
+    if ((Test-Path -Path $rootPath -PathType Container) -and ($null -eq (Get-ChildItem -Path $rootPath))){
+      Write-Verbose "Removing root working folder [$rootPath]..."
+      Remove-Item -Path $rootPath -Confirm:$false
+      Write-Verbose "Removing root working folder [$rootPath] complete."
     }
   }
 
