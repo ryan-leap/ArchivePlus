@@ -73,13 +73,12 @@ function Get-ArchivePlusChildItem {
     if ($Depth -ge 0) { 
       $childItemParms.Add('Depth', $Depth)
     }
-    Write-Debug "Parameters passed to 'Get-ChildItem': $(New-Object -TypeName PSObject -Property $childItemParms)"
-    $archiveChildItem = Get-ChildItem @childItemParms
+    Write-Debug "Parameters for 'Get-ChildItem': $(New-Object -TypeName PSObject -Property $childItemParms)"
     if ($Name) {
-      $archiveChildItem
+      Get-ChildItem @childItemParms
     }
     else {
-      foreach ($item in $archiveChildItem) {
+      foreach ($item in (Get-ChildItem @childItemParms)) {
         Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath -PassThru
       }
     }
