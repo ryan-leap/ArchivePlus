@@ -13,6 +13,8 @@ function Get-ArchivePlusChildItem {
   Gets the items in the specified archive and in all child items of the expanded archive.
 .PARAMETER Depth
   Enables you to control the depth of recursion.
+.PARAMETER WorkingPath
+  Specifies the path where this function will create temporary folder(s) to extract the archive contents
 .OUTPUTS
   System.Object
 .OUTPUTS
@@ -28,15 +30,30 @@ function Get-ArchivePlusChildItem {
   Param (
     [ValidateScript({Test-Path -Path $_ -PathType Leaf})]
     [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
-    [string] $Path
+    [string] $Path,
+
+    [ValidateScript({Test-Path -Path $_ -PathType Container})]
+    [Parameter(Mandatory=$false)]
+    [string] $WorkingPath = $env:TEMP
   )
 
-  Begin {}
+  Begin {
+    if (-not(Test-Path -Path (Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus'))) {
+      [string] $rootPath = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus') -ItemType Directory -ErrorAction Stop
+    }
+    [string] $destinationPath = New-Item -Path (Join-Path $rootPath -ChildPath (Get-Date -Format FileDateTime)) -ItemType Directory -ErrorAction Stop
+  }
 
   Process {
 
   }
 
-  End {}
+  End {
+    if (Test-Path -Path $destinationPath -PathType Container) {
+      Write-Verbose "Removing working folder [$destinationPath]..."
+      # Remove-Item -Path $destinationPath -Recurse
+      Write-Verbose "Removing working folder [$destinationPath] complete."
+    }
+  }
 
 }
