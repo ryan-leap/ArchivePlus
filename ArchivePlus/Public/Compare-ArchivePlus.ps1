@@ -17,6 +17,8 @@ function Compare-ArchivePlus {
 .PARAMETER IncludeEqual
   Indicates that this cmdlet displays characteristics of compared files that are equal. By default, only characteristics
   that differ between the reference and difference archive files are displayed.
+.PARAMETER PassThru
+  Returns an object representing the item with which you are working. By default, this cmdlet does not generate any output.
 .OUTPUTS
   System.Object
 .NOTES
@@ -48,6 +50,7 @@ function Compare-ArchivePlus {
       'DifferenceObject' = (Get-ArchivePlusChildItem -Path $DifferenceArchivePath -Recurse -FileHash)
       'ExcludeDifferent' = if ($ExcludeDifferent) { $true } else { $false }
       'IncludeEqual'     = if ($IncludeEqual) { $true } else { $false }
+      'PassThru'         = if ($IncludeEqual) { $true } else { $false }
       'Property'         = 'Name','Hash'
     }
     Compare-Object @compareParms
