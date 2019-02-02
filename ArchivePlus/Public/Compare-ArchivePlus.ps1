@@ -55,6 +55,7 @@ function Compare-ArchivePlus {
       'PassThru'         = if ($PassThru) { $true } else { $false }
       'Property'         = 'Name','Hash'
     }
+    Write-Debug "Parameters for 'Compare-Object': $(New-Object -TypeName PSObject -Property $compareParms)"
     Compare-Object @compareParms
   }
 
