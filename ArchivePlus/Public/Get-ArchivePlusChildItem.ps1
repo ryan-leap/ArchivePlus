@@ -70,9 +70,10 @@ function Get-ArchivePlusChildItem {
       'Name'     = if ($Name) { $true } else { $false }
       'Recurse'  = if ($Recurse) { $true } else { $false }
     }
-    if ($Depth) { 
+    if ($Depth -ge 0) { 
       $childItemParms.Add('Depth', $Depth)
     }
+    Write-Debug "Parameters passed to 'Get-ChildItem': $(New-Object -TypeName PSObject -Property $childItemParms)"
     $archiveChildItem = Get-ChildItem @childItemParms
     if ($Name) {
       $archiveChildItem
