@@ -23,14 +23,11 @@ Get-Help ArchivePlus
 ## Examples
 ### Get-ArchivePlusChildItem
 ```powershell
-# Gets the files and folders in an archive
-Get-ArchivePlusChildItem
+# Gets the items in the archive specified
+Get-ArchivePlusChildItem -Path "$env:temp\classical_mix.zip"
 
-```
-### Compare-ArchivePlus
-```powershell
-# Compares the files in two archives
-Compare-ArchivePlus
+# Gets the items and child items in the archive specified
+Get-ArchivePlusChildItem -Path "$env:temp\classical_mix.zip" -Recurse
 ```
 ## Author(s)
 
