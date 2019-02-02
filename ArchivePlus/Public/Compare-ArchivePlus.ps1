@@ -12,6 +12,11 @@ function Compare-ArchivePlus {
   Specifies the path to the archive file used as a reference for comparison.
 .PARAMETER DifferenceArchivePath
   Specifies the path to the archive file to be compared to the reference archive.
+.PARAMETER ExcludeDifferent
+  Indicates that this cmdlet displays only the characteristics of compared files that are equal.
+.PARAMETER IncludeEqual
+  Indicates that this cmdlet displays characteristics of compared files that are equal. By default, only characteristics
+  that differ between the reference and difference archive files are displayed.
 .OUTPUTS
   System.Object
 .NOTES
@@ -28,7 +33,11 @@ function Compare-ArchivePlus {
 
     [ValidateScript({Test-Path -Path $_ -PathType Leaf})]
     [Parameter(Mandatory=$true)]
-    [string] $DifferenceArchivePath
+    [string] $DifferenceArchivePath,
+
+    [switch] $ExcludeDifferent,
+
+    [switch] $IncludeEqual
   )
 
   Begin {}
@@ -37,6 +46,8 @@ function Compare-ArchivePlus {
     $compareParms = @{
       'ReferenceObject'  = (Get-ArchivePlusChildItem -Path $ReferenceArchivePath -Recurse -FileHash)
       'DifferenceObject' = (Get-ArchivePlusChildItem -Path $DifferenceArchivePath -Recurse -FileHash)
+      'ExcludeDifferent' = if ($ExcludeDifferent) { $true } else { $false }
+      'IncludeEqual'     = if ($IncludeEqual) { $true } else { $false }
       'Property'         = 'Name','Hash'
     }
     Compare-Object @compareParms
