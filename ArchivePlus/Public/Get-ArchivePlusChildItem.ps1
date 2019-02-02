@@ -1,3 +1,6 @@
+# Compress-Archive and Expand-Archive cmdlets were introduced with PowerShell v5
+#Requires -Version 5
+
 function Get-ArchivePlusChildItem {
 <#
 .SYNOPSIS
@@ -32,7 +35,11 @@ function Get-ArchivePlusChildItem {
     [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
     [string] $Path,
 
+    [switch] $Name,
+    
     [switch] $Recurse,
+
+    [uint32] $Depth,
 
     [ValidateScript({Test-Path -Path $_ -PathType Container})]
     [Parameter(Mandatory=$false)]
@@ -40,6 +47,8 @@ function Get-ArchivePlusChildItem {
   )
 
   Begin {
+
+    $archivePath = Get-ChildItem -Path $Path
     $rootPath = Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus'
     if (-not(Test-Path -Path $rootPath -PathType Container)) {
       Write-Verbose "Creating root working folder [$rootPath]..."
@@ -50,21 +59,34 @@ function Get-ArchivePlusChildItem {
     Write-Verbose "Creating archive working folder [$destinationPath]..."
     $destinationPath = New-Item -Path $destinationPath -ItemType Directory -ErrorAction Stop
     Write-Verbose "Creating archive working folder [$($destinationPath.FullName)] complete."
+
   }
 
   Process {
+
     Expand-Archive -Path $Path -DestinationPath $destinationPath
     [hashtable] $childItemParms = @{
       'Path'     = $destinationPath
+      'Name'     = if ($Name) { $true } else { $false }
       'Recurse'  = if ($Recurse) { $true } else { $false }
     }
-    $archivePath = Get-ChildItem -Path $Path
-    foreach ($item in (Get-ChildItem @childItemParms)) {
-      Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath -PassThru
+    if ($Depth) { 
+      $childItemParms.Add('Depth', $Depth)
     }
+    $archiveChildItem = Get-ChildItem @childItemParms
+    if ($Name) {
+      $archiveChildItem
+    }
+    else {
+      foreach ($item in $archiveChildItem) {
+        Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath -PassThru
+      }
+    }
+
   }
 
   End {
+
     if (Test-Path -Path $destinationPath -PathType Container) {
       Write-Verbose "Removing archive working folder [$destinationPath]..."
       Remove-Item -Path $destinationPath -Recurse -Confirm:$false
@@ -75,6 +97,7 @@ function Get-ArchivePlusChildItem {
       Remove-Item -Path $rootPath -Confirm:$false
       Write-Verbose "Removing root working folder [$rootPath] complete."
     }
+
   }
 
 }
