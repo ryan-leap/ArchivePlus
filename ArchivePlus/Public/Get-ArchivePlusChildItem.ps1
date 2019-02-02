@@ -7,7 +7,8 @@ function Get-ArchivePlusChildItem {
   Gets the items and child items in the archive specified.
 .DESCRIPTION
   Gets the items and child items in the archive specified. Extracts the archive to a temporary
-  location and runs Get-ChildItem against the extracted contents to provide results.
+  location and runs Get-ChildItem against the extracted contents to provide results.  The archive
+  file item is included as an additional property on the items returned.
 .PARAMETER Path
   Specifies the path to the archive file.
 .PARAMETER Name
@@ -27,7 +28,7 @@ function Get-ArchivePlusChildItem {
    Email: ryan.leap@gmail.com
 #>
 
-  [CmdletBinding()]
+  [CmdletBinding(DefaultParameterSetName='Standard')]
   [OutputType([System.Object])]
   [OutputType([System.String])]
   Param (
@@ -43,6 +44,13 @@ function Get-ArchivePlusChildItem {
 
     [switch] $Name,
     
+    [Parameter(ParameterSetName='AddHash',Mandatory=$false)] 
+    [switch] $FileHash,
+
+    [Parameter(ParameterSetName='AddHash',Mandatory=$false)] 
+    [ValidateSet('SHA1','SHA256','SHA384','SHA512','MACTripleDES','MD5','RIPEMD160')]
+    [string[]] $Algorithm = 'SHA256',
+
     [ValidateScript({Test-Path -Path $_ -PathType Container})]
     [Parameter(Mandatory=$false)]
     [string] $WorkingPath = $env:TEMP
