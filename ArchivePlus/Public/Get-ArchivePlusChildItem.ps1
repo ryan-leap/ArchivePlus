@@ -35,12 +35,13 @@ function Get-ArchivePlusChildItem {
     [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
     [string] $Path,
 
-    [switch] $Name,
-    
     [switch] $Recurse,
 
+    [Parameter(Mandatory=$false)]
     [uint32] $Depth,
 
+    [switch] $Name,
+    
     [ValidateScript({Test-Path -Path $_ -PathType Container})]
     [Parameter(Mandatory=$false)]
     [string] $WorkingPath = $env:TEMP
@@ -65,12 +66,12 @@ function Get-ArchivePlusChildItem {
   Process {
 
     Expand-Archive -Path $Path -DestinationPath $destinationPath
-    [hashtable] $childItemParms = @{
+    [hashtable] $childItemParms = [ordered] @{
       'Path'     = $destinationPath
       'Name'     = if ($Name) { $true } else { $false }
       'Recurse'  = if ($Recurse) { $true } else { $false }
     }
-    if ($Depth -ge 0) { 
+    if ($null -ne $Depth) { # This parameter gets added (as a zero) even when it is not explicitly used. Seems not good.
       $childItemParms.Add('Depth', $Depth)
     }
     Write-Debug "Parameters for 'Get-ChildItem': $(New-Object -TypeName PSObject -Property $childItemParms)"
