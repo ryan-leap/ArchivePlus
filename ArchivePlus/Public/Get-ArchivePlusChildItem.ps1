@@ -94,7 +94,7 @@ function Get-ArchivePlusChildItem {
     else {
       foreach ($item in (Get-ChildItem @childItemParms)) {
         if (($FileHash) -and (-not($item.PSIsContainer))) {
-          $fileHashInfo = Get-FileHash -Path $item
+          $fileHashInfo = Get-FileHash -Path $item -Algorithm $Algorithm
           Add-Member -InputObject $item -MemberType NoteProperty -Name 'Hash' -Value $fileHashInfo.Hash
           Add-Member -InputObject $item -MemberType NoteProperty -Name 'Algorithm' -Value $fileHashInfo.Algorithm
         }
