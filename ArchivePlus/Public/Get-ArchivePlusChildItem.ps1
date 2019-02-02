@@ -39,9 +39,13 @@ function Get-ArchivePlusChildItem {
 
   Begin {
     if (-not(Test-Path -Path (Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus'))) {
+      Write-Verbose "Creating root working folder..."
       [string] $rootPath = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus') -ItemType Directory -ErrorAction Stop
+      Write-Verbose "Creating root working folder [$($rootPath.FullName)] complete."
     }
+    Write-Verbose "Creating archive extract working folder..."
     [string] $destinationPath = New-Item -Path (Join-Path $rootPath -ChildPath (Get-Date -Format FileDateTime)) -ItemType Directory -ErrorAction Stop
+    Write-Verbose "Creating archive extract working folder [$($destinationPath.FullName)] complete."
   }
 
   Process {
