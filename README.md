@@ -22,8 +22,8 @@ Get-Help ArchivePlus
 
 ## Examples
 ### Get-ArchivePlusChildItem
+Modeled after the built-it 'Get-ChildItem' cmdlet but specialized for archive files
 ```powershell
-# Gets the items in the archive specified
 PS C:\> Compress-Archive -Path .\apples.txt,.\bananas.txt,.\lemons.txt,.\oranges.txt -DestinationPath .\fruit_mix_I.zip
 PS C:\> Compress-Archive -Path .\lemons.txt,.\oranges.txt,.\pineapples.txt,.\strawberries.txt -DestinationPath .\fruit_mix_II.zip
 PS C:\> Get-ArchivePlusChildItem -Path .\fruit_mix_I.zip
@@ -50,6 +50,7 @@ Mode                LastWriteTime         Length Name
 
 ```
 ### Compare-ArchivePlus
+Modeled after the built-in 'Compare-Object' cmdlet but specialized for archive files
 ```powershell
 PS C:\> Compare-ArchivePlus -ReferenceArchivePath .\fruit_mix_I.zip -DifferenceArchivePath .\fruit_mix_II.zip
 
