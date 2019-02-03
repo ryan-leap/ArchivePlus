@@ -20,7 +20,7 @@ function Compare-ArchivePlus {
   Indicates that this cmdlet displays characteristics of compared files that are equal. By default, only characteristics
   that differ between the reference and difference archive files are displayed.
 .PARAMETER PassThru
-  Returns an object representing the item with which you are working. By default, this cmdlet does not generate any output.
+  Returns an object representing the item with which you are working.
 .OUTPUTS
   System.Object
 .NOTES
