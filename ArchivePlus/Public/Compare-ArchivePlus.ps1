@@ -21,6 +21,12 @@ function Compare-ArchivePlus {
   that differ between the reference and difference archive files are displayed.
 .PARAMETER PassThru
   Returns an object representing the item with which you are working.
+.EXAMPLE
+  Compare-ArchivePlus -ReferenceArchivePath .\fruit_mix_I.zip -DifferenceArchivePath .\fruit_mix_II.zip
+  Compares the reference and difference archive files
+.EXAMPLE
+  Compare-ArchivePlus -ReferenceArchivePath .\fruit_mix_I.zip -DifferenceArchivePath .\fruit_mix_II.zip  -IncludeEqual -ExcludeDifferent
+  Compares the reference and difference archive files identifying items which are equal
 .OUTPUTS
   System.Object
 .NOTES
