@@ -6,7 +6,7 @@ function Compare-ArchivePlus {
 .SYNOPSIS
   Compares two archive files.
 .DESCRIPTION
-  Compares two archive files - one is the "reference archive" and the other is the "difference archive".  Modeled
+  Compares two archive files.  One is the "reference archive" and the other is the "difference archive".  Modeled
   after the built-in 'Compare-Object' cmdlet, but specialized for archive file comparison.
 .PARAMETER ReferenceArchivePath
   Specifies the path to the archive file used as a reference for comparison.
