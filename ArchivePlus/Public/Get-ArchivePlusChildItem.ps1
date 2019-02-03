@@ -27,6 +27,15 @@ function Get-ArchivePlusChildItem {
   Specifies the cryptographic hash function to use for computing the hash value of the contents of the specified file.
 .PARAMETER WorkingPath
   Specifies the path where this function will create temporary folder(s) to extract the archive contents
+.EXAMPLE
+  Get-ArchivePlusChildItem -Path .\fruit_mix_I.zip
+  Gets the items in the specified archive file
+.EXAMPLE
+  Get-ArchivePlusChildItem -Path .\fruit_mix_I.zip -Recurse
+  Gets the items and all child items in the specified archive file
+.EXAMPLE
+  Get-ChildItem -Path .\fruit_mix_*.zip | Get-ArchivePlusChildItem
+  Uses the pipeline to get the items in multiple archive files
 .OUTPUTS
   System.Object
 .OUTPUTS
