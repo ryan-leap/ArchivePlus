@@ -17,6 +17,10 @@ function Get-ArchivePlusChildItem {
   Gets the items in the specified archive and in all child items of the expanded archive.
 .PARAMETER Depth
   Enables you to control the depth of recursion.
+.PARAMETER File
+  Gets files.  To get only files, use the File parameter and omit the Directory parameter.
+.PARAMETER Directory
+  Gets directories (folders).  To get only directories, use the Directory parameter and omit the File parameter.
 .PARAMETER FileHash
   Adds a file hash property to each file item in the archive file.
 .PARAMETER Algorithm
@@ -47,7 +51,11 @@ function Get-ArchivePlusChildItem {
     [string] $Depth,
 
     [switch] $Name,
-    
+
+    [switch] $Directory,
+
+    [switch] $File,
+
     [Parameter(ParameterSetName='AddHash',Mandatory=$false)] 
     [switch] $FileHash,
 
@@ -80,9 +88,11 @@ function Get-ArchivePlusChildItem {
 
     Expand-Archive -Path $Path -DestinationPath $destinationPath
     [hashtable] $childItemParms = [ordered] @{
-      'Path'     = $destinationPath
-      'Name'     = if ($Name) { $true } else { $false }
-      'Recurse'  = if ($Recurse) { $true } else { $false }
+      'Path'      = $destinationPath
+      'Name'      = if ($Name) { $true } else { $false }
+      'Recurse'   = if ($Recurse) { $true } else { $false }
+      'Directory' = if ($Directory) { $true } else { $false }
+      'File'      = if ($File) { $true } else { $false }
     }
     if (-not([string]::IsNullOrEmpty($Depth))) {
       $childItemParms.Add('Depth', [uint32] $Depth)
