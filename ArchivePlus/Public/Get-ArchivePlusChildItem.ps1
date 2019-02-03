@@ -37,7 +37,7 @@ function Get-ArchivePlusChildItem {
   [OutputType([System.String])]
   Param (
     [ValidateScript({Test-Path -Path $_ -PathType Leaf})]
-    [Parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true)]
+    [Parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true,ValueFromPipelineByPropertyName=$true)]
     [string] $Path,
 
     [switch] $Recurse,
