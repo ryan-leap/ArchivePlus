@@ -53,7 +53,7 @@ function Compare-ArchivePlus {
       'ExcludeDifferent' = if ($ExcludeDifferent) { $true } else { $false }
       'IncludeEqual'     = if ($IncludeEqual) { $true } else { $false }
       'PassThru'         = if ($PassThru) { $true } else { $false }
-      'Property'         = 'Name','Hash'
+      'Property'         = 'RelativeName','Hash'
     }
     Write-Debug "Parameters for 'Compare-Object': $(New-Object -TypeName PSObject -Property $compareParms)"
     Compare-Object @compareParms
