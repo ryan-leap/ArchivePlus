@@ -14,7 +14,7 @@ function Get-ArchivePlusChildItem {
 .PARAMETER Name
   Gets only the names of the items in the archive file.
 .PARAMETER Recurse
-  Gets the items in the specified archive and in all child items of the expanded archive.
+  Gets the items and all child items of the expanded archive.
 .PARAMETER Depth
   Enables you to control the depth of recursion.
 .PARAMETER File
