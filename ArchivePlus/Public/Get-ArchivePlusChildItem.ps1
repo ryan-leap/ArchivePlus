@@ -69,65 +69,66 @@ function Get-ArchivePlusChildItem {
   )
 
   Begin {
-
-    $archivePath = Get-ChildItem -Path $Path
-    $rootPath = Join-Path -Path $env:TEMP -ChildPath 'ArchivePlus'
+    # Prepare a root-level working folder in the working path provided
+    $rootPath = Join-Path -Path $WorkingPath -ChildPath 'ArchivePlus'
     if (-not(Test-Path -Path $rootPath -PathType Container)) {
       Write-Verbose "Creating root working folder [$rootPath]..."
       $rootPath = New-Item -Path $rootPath -ItemType Directory -ErrorAction Stop
       Write-Verbose "Creating root working folder [$($rootPath.FullName)] complete."
     }
-    $destinationPath = Join-Path $rootPath -ChildPath (Get-Date -Format FileDateTime)
-    Write-Verbose "Creating archive working folder [$destinationPath]..."
-    $destinationPath = New-Item -Path $destinationPath -ItemType Directory -ErrorAction Stop
-    Write-Verbose "Creating archive working folder [$($destinationPath.FullName)] complete."
-
   }
-
   Process {
-
-    Expand-Archive -Path $Path -DestinationPath $destinationPath
-    [hashtable] $childItemParms = [ordered] @{
-      'Path'      = $destinationPath
-      'Name'      = if ($Name) { $true } else { $false }
-      'Recurse'   = if ($Recurse) { $true } else { $false }
-      'Directory' = if ($Directory) { $true } else { $false }
-      'File'      = if ($File) { $true } else { $false }
-    }
-    if (-not([string]::IsNullOrEmpty($Depth))) {
-      $childItemParms.Add('Depth', [uint32] $Depth)
-    }
-    Write-Debug "Parameters for 'Get-ChildItem': $(New-Object -TypeName PSObject -Property $childItemParms)"
-    if ($Name) {
-      Get-ChildItem @childItemParms
-    }
-    else {
-      foreach ($item in (Get-ChildItem @childItemParms)) {
-        if (($FileHash) -and (-not($item.PSIsContainer))) {
-          $fileHashInfo = Get-FileHash -Path $item -Algorithm $Algorithm
-          Add-Member -InputObject $item -MemberType NoteProperty -Name 'Hash' -Value $fileHashInfo.Hash
-          Add-Member -InputObject $item -MemberType NoteProperty -Name 'Algorithm' -Value $fileHashInfo.Algorithm
+    try {
+      # Prepare a working folder for the archive being processed
+      $destinationPath = Join-Path $rootPath -ChildPath (Get-Date -Format FileDateTime)
+      Write-Verbose "Creating archive working folder [$destinationPath]..."
+      $destinationPath = New-Item -Path $destinationPath -ItemType Directory -ErrorAction Stop
+      Write-Verbose "Creating archive working folder [$($destinationPath.FullName)] complete."
+      # Extract archive and get items
+      $archivePath = Get-ChildItem -Path $Path
+      Expand-Archive -Path $Path -DestinationPath $destinationPath
+      [hashtable] $childItemParms = [ordered] @{
+        'Path'      = $destinationPath
+        'Name'      = if ($Name) { $true } else { $false }
+        'Recurse'   = if ($Recurse) { $true } else { $false }
+        'Directory' = if ($Directory) { $true } else { $false }
+        'File'      = if ($File) { $true } else { $false }
+      }
+      if (-not([string]::IsNullOrEmpty($Depth))) {
+        $childItemParms.Add('Depth', [uint32] $Depth)
+      }
+      Write-Debug "Parameters for 'Get-ChildItem': $(New-Object -TypeName PSObject -Property $childItemParms)"
+      if ($Name) {
+        Get-ChildItem @childItemParms
+      }
+      else {
+        foreach ($item in (Get-ChildItem @childItemParms)) {
+          if (($FileHash) -and (-not($item.PSIsContainer))) {
+            $fileHashInfo = Get-FileHash -Path $item -Algorithm $Algorithm
+            Add-Member -InputObject $item -MemberType NoteProperty -Name 'Hash' -Value $fileHashInfo.Hash
+            Add-Member -InputObject $item -MemberType NoteProperty -Name 'Algorithm' -Value $fileHashInfo.Algorithm
+          }
+          Add-Member -InputObject $item -MemberType NoteProperty -Name 'RelativeName' -Value ($item.FullName.Substring($destinationPath.FullName.Length + 1))
+          Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath -PassThru
         }
-        Add-Member -InputObject $item -MemberType NoteProperty -Name 'RelativeName' -Value ($item.FullName.Substring($destinationPath.FullName.Length + 1))
-        Add-Member -InputObject $item -MemberType NoteProperty -Name 'ArchiveFileInfo' -Value $archivePath -PassThru
       }
     }
-
-  }
-
-  End {
-
-    if (Test-Path -Path $destinationPath -PathType Container) {
-      Write-Verbose "Removing archive working folder [$destinationPath]..."
-      Remove-Item -Path $destinationPath -Recurse -Confirm:$false
-      Write-Verbose "Removing archive working folder [$destinationPath] complete."
+    finally {
+      # Clean up the working folder created for the archive that was processed
+      if (Test-Path -Path $destinationPath -PathType Container) {
+        Write-Verbose "Removing archive working folder [$destinationPath]..."
+        Remove-Item -Path $destinationPath -Recurse -Confirm:$false
+        Write-Verbose "Removing archive working folder [$destinationPath] complete."
+      }
     }
+  }
+  End {
+    # Clean up the root-level working folder
     if ((Test-Path -Path $rootPath -PathType Container) -and ($null -eq (Get-ChildItem -Path $rootPath))){
       Write-Verbose "Removing root working folder [$rootPath]..."
       Remove-Item -Path $rootPath -Confirm:$false
       Write-Verbose "Removing root working folder [$rootPath] complete."
     }
-
   }
 
 }
