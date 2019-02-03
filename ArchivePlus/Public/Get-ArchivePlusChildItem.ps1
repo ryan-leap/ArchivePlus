@@ -32,12 +32,12 @@ function Get-ArchivePlusChildItem {
    Email: ryan.leap@gmail.com
 #>
 
-  [CmdletBinding(DefaultParameterSetName='Standard')]
+  [CmdletBinding(DefaultParameterSetName='Standard',PositionalBinding=$false)]
   [OutputType([System.Object])]
   [OutputType([System.String])]
   Param (
     [ValidateScript({Test-Path -Path $_ -PathType Leaf})]
-    [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+    [Parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true)]
     [string] $Path,
 
     [switch] $Recurse,
