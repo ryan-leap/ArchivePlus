@@ -6,9 +6,9 @@ function Get-ArchivePlusChildItem {
 .SYNOPSIS
   Gets the items and child items in the archive specified.
 .DESCRIPTION
-  Gets the items and child items in the archive specified. Extracts the archive to a temporary
-  location and runs Get-ChildItem against the extracted contents to provide results.  The archive
-  file item is included as an additional property on the items returned.
+  Gets the items and child items in the archive specified. Modeled after the built-in 'Get-ChildItem'
+  cmdlet, but specialized for archive files.  The archive file item and relative file path within
+  the archive are included as additional properties on the items returned.
 .PARAMETER Path
   Specifies the path to the archive file.
 .PARAMETER Name
