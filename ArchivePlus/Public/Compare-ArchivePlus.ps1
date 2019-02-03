@@ -12,6 +12,8 @@ function Compare-ArchivePlus {
   Specifies the path to the archive file used as a reference for comparison.
 .PARAMETER DifferenceArchivePath
   Specifies the path to the archive file to be compared to the reference archive.
+.PARAMETER Property
+  Specifies an array of properties of the reference and difference archive contents (files/folders) to compare.
 .PARAMETER ExcludeDifferent
   Indicates that this cmdlet displays only the characteristics of compared files that are equal.
 .PARAMETER IncludeEqual
@@ -37,6 +39,9 @@ function Compare-ArchivePlus {
     [Parameter(Mandatory=$true)]
     [string] $DifferenceArchivePath,
 
+    [Parameter(Mandatory=$false)]
+    [Object[]] $Property = @('Name','Hash'),
+    
     [switch] $ExcludeDifferent,
 
     [switch] $IncludeEqual,
@@ -53,7 +58,7 @@ function Compare-ArchivePlus {
       'ExcludeDifferent' = if ($ExcludeDifferent) { $true } else { $false }
       'IncludeEqual'     = if ($IncludeEqual) { $true } else { $false }
       'PassThru'         = if ($PassThru) { $true } else { $false }
-      'Property'         = 'RelativeName','Hash'
+      'Property'         = $Property
     }
     Write-Debug "Parameters for 'Compare-Object': $(New-Object -TypeName PSObject -Property $compareParms)"
     Compare-Object @compareParms
