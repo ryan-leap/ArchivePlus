@@ -24,10 +24,48 @@ Get-Help ArchivePlus
 ### Get-ArchivePlusChildItem
 ```powershell
 # Gets the items in the archive specified
-Get-ArchivePlusChildItem -Path "$env:temp\classical_mix.zip"
+PS C:\> Compress-Archive -Path .\apples.txt,.\bananas.txt,.\lemons.txt,.\oranges.txt -DestinationPath .\fruit_mix_I.zip
+PS C:\> Compress-Archive -Path .\lemons.txt,.\oranges.txt,.\pineapples.txt,.\strawberries.txt -DestinationPath .\fruit_mix_II.zip
+PS C:\> Get-ArchivePlusChildItem -Path .\fruit_mix_I.zip
 
-# Gets the items and child items in the archive specified
-Get-ArchivePlusChildItem -Path "$env:temp\classical_mix.zip" -Recurse
+    Directory: C:\Users\ryanl\AppData\Local\Temp\ArchivePlus\20190203T1636550585
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         2/3/2019   4:23 PM             38 apples.txt
+-a----         2/3/2019   4:24 PM             38 bananas.txt
+-a----         2/3/2019   4:25 PM             38 lemons.txt
+-a----         2/3/2019   4:24 PM             38 oranges.txt
+
+PS C:\> Get-ArchivePlusChildItem -Path .\fruit_mix_II.zip
+
+    Directory: C:\Users\ryanl\AppData\Local\Temp\ArchivePlus\20190203T1636551932
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         2/3/2019   4:25 PM             38 lemons.txt
+-a----         2/3/2019   4:24 PM             38 oranges.txt
+-a----         2/3/2019   4:25 PM             38 pineapples.txt
+-a----         2/3/2019   4:24 PM             38 strawberries.txt
+
+```
+### Compare-ArchivePlus
+```powershell
+PS C:\> Compare-ArchivePlus -ReferenceArchivePath .\fruit_mix_I.zip -DifferenceArchivePath .\fruit_mix_II.zip
+
+Name             Hash                                                             SideIndicator
+----             ----                                                             -------------
+pineapples.txt   4FD2A3C375B927F66136C90ECB4333AA4F8BFE0610A14368570033BEF11DDB38 =>
+strawberries.txt 02155196DBF346CC9CAA0FA7D53F548F2A5FFA0B694E81A757F79A81BB03EA4C =>
+apples.txt       D1AE1043BBE88B85C5F4707362205DEC02946ECEDF554829AC06FA175C8AB142 <=
+bananas.txt      A15C57E921636CFEC19E350CBD42FE3579AA98C80233B65A41B40BB5400A18A2 <=
+
+PS C:\> Compare-ArchivePlus -ReferenceArchivePath .\fruit_mix_I.zip -DifferenceArchivePath .\fruit_mix_II.zip -IncludeEqual -ExcludeDifferent
+
+Name        Hash                                                             SideIndicator
+----        ----                                                             -------------
+lemons.txt  156BFD0E31A293C915FAB14D622666F9ABD7E11D3147200C3B618D77E2F4DF25 ==
+oranges.txt 48FE555BCA60A1332D3E99BD6B8F21E47E7F33C9454FCBCD11CA11751F588796 ==
 ```
 ## Author(s)
 
