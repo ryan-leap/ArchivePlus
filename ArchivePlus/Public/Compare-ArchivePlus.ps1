@@ -59,8 +59,8 @@ function Compare-ArchivePlus {
 
   Process {
     $compareParms = @{
-      'ReferenceObject'  = (Get-ArchivePlusChildItem -Path $ReferenceArchivePath -Recurse -FileHash)
-      'DifferenceObject' = (Get-ArchivePlusChildItem -Path $DifferenceArchivePath -Recurse -FileHash)
+      'ReferenceObject'  = (Get-ArchivePlusChildItem -Path $ReferenceArchivePath -Recurse -FileHash -Algorithm MD5)
+      'DifferenceObject' = (Get-ArchivePlusChildItem -Path $DifferenceArchivePath -Recurse -FileHash -Algorithm MD5)
       'ExcludeDifferent' = if ($ExcludeDifferent) { $true } else { $false }
       'IncludeEqual'     = if ($IncludeEqual) { $true } else { $false }
       'PassThru'         = if ($PassThru) { $true } else { $false }
