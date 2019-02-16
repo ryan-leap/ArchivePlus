@@ -45,6 +45,25 @@ Mode                LastWriteTime         Length Name
 -a----         2/3/2019   4:24 PM             38 bananas.txt
 -a----         2/3/2019   4:25 PM             38 lemons.txt
 -a----         2/3/2019   4:24 PM             38 strawberries.txt
+
+PS C:\> # Pipeline Support
+PS C:\> 'c:\food\fruit_mix_I.zip','c:\food\fruit_mix_II.zip' | Get-ArchivePlusChildItem
+
+    Directory: C:\Users\ryanl\AppData\Local\Temp\ArchivePlus\20190216T1503048865
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         2/3/2019   4:23 PM             38 apples.txt
+-a----         2/3/2019   4:25 PM             38 lemons.txt
+-a----         2/3/2019   4:24 PM             38 oranges.txt
+
+    Directory: C:\Users\ryanl\AppData\Local\Temp\ArchivePlus\20190216T1503049426
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         2/3/2019   4:24 PM             38 bananas.txt
+-a----         2/3/2019   4:25 PM             38 lemons.txt
+-a----         2/3/2019   4:24 PM             38 strawberries.txt
 ```
 ### Compare-ArchivePlus
 Modeled after the built-in ```Compare-Object``` cmdlet but specialized for archive files
