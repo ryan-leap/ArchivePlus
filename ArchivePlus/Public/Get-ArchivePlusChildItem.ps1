@@ -74,7 +74,7 @@ function Get-ArchivePlusChildItem {
 
     [ValidateScript({Test-Path -Path $_ -PathType Container})]
     [Parameter(Mandatory=$false)]
-    [string] $WorkingPath = $env:TEMP
+    [string] $WorkingPath = [System.IO.Path]::GetTempPath()
   )
 
   Begin {
