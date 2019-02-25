@@ -23,9 +23,13 @@ Get-Help ArchivePlus
 ## Examples
 ### Get-ArchivePlusChildItem
 Modeled after the built-in ```Get-ChildItem``` cmdlet but specialized for archive files
+#### Create Archives
 ```powershell
 PS C:\> Compress-Archive -Path .\apples.txt,.\oranges.txt,.\lemons.txt -DestinationPath .\fruit_mix_I.zip
 PS C:\> Compress-Archive -Path .\lemons.txt,.\bananas.txt,.\strawberries.txt -DestinationPath .\fruit_mix_II.zip
+```
+#### List Archive Contents
+```powershell
 PS C:\> Get-ArchivePlusChildItem -Path .\fruit_mix_I.zip
 
     Directory: C:\Users\ryanl\AppData\Local\Temp\ArchivePlus\20190214T2100082230
@@ -68,6 +72,7 @@ Mode                LastWriteTime         Length Name
 ```
 ### Compare-ArchivePlus
 Modeled after the built-in ```Compare-Object``` cmdlet but specialized for archive files
+#### Find Content Differences
 ```powershell
 PS C:\> Compare-ArchivePlus -ReferenceArchivePath .\fruit_mix_I.zip -DifferenceArchivePath .\fruit_mix_II.zip
 
@@ -77,7 +82,9 @@ bananas.txt      1487064BFA051F0B591740AC993BB639 =>
 strawberries.txt A36A3240037C8E29653531F7D32FCC56 =>
 apples.txt       30F61BE97022CA6D50D0F24933D256A8 <=
 oranges.txt      AB542B90DE97A29ACC04FFDE5D00A3A3 <=
-
+```
+#### Find Content Equalities
+```powershell
 PS C:\> Compare-ArchivePlus -ReferenceArchivePath .\fruit_mix_I.zip -DifferenceArchivePath .\fruit_mix_II.zip -IncludeEqual -ExcludeDifferent
 
 Name       Hash                             SideIndicator
